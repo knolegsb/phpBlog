@@ -1,15 +1,21 @@
 <?php
     include('header.php');
     include('post.php');
+    include('tag.php');
 ?>
 
 <?php
     $post = new Post($db);
+    $tags = new Tag($db);
 ?>
 
 <div class="container">
     <div class="row">
         <div class="col-md-8">
+            <?php if(isset($_GET['keyword'])) {
+                echo 'Search for:'.'<i>'.$_GET['keyword'].'</i>';
+            } ?>
+
             <?php foreach($post->getPost() as $post) {?>
             <div class="media">
                 <div class="media-left media-top">
@@ -19,13 +25,34 @@
                     </p>
                 </div>
                 <div class="media-body">
-                    <h4 class="media-heading"><a href="#"><?php echo $post['title'] ?></a></h4>
+                    <h4 class="media-heading"><a href="view.php?slug=<?php echo $post['slug']; ?>"><?php echo $post['title'] ?></a></h4>
                     <P>
                         <?php echo htmlspecialchars_decode($post['content']) ?>
                     </P>                    
                 </div>
             </div>
             <?php }?>
+        </div>
+        <div class="col-md-4">
+                <h4>Browse by Tags</h4>
+                <!-- <?php 
+                    foreach($tags->getAllTags() as $tag) {
+                        echo $tag['tag'].'<br />';
+                    }
+                ?> -->
+                <p>
+                    <?php foreach($tags->getAllTags() as $tag) { ?>
+                        <a href="index.php?tag=<?php echo $tag['tag']; ?>"><button type="button" class="btn btn-outline-warning btn-sm">
+                            <?php echo $tag['tag']; ?>
+                        </button>                    
+                    <?php } ?>
+                </p>
+                <p>
+                    <h4>Search Posts</h4>
+                    <form action="" method="GET">
+                        <input type="text" name="keyword" class="form-control" placeholder="search...">
+                    </form>
+                </p>
         </div>
     </div>
 </div>
@@ -41,5 +68,13 @@
 
     .media {
         margin-top: 10px;
+    }
+
+    .btn-group-sm>.btn, .btn-sm {
+        padding: .25rem .5rem;
+        font-size: .875rem;
+        line-height: 1.5;
+        border-radius: .2rem;
+        margin-top: 12px;
     }
 </style>

@@ -1,74 +1,48 @@
 <?php
     include('header.php');
     include('post.php');
-    include('functions/functions.php');
-    include('tag.php');
+    // include('functions/functions.php');
+    // include('tag.php');
 
-    $post = new Post($db);
-    $tags = new Tag($db);
+    $posts = new Post($db);
+    // $tags = new Tag($db);
 
-    //$post->addPost();
-    if (isset($_POST['btnSubmit'])) {
-        //echo 'Button clicked';
-        $create_at = date('Y-m-d');
-
-        if (!empty($_POST['title'])&&!empty($_POST['content'])) {
-            $title = strip_tags($_POST['title']);
-            $content = $_POST['content'];
-            $slug = createSlug($title);
-            $checkSlug = mysqli_query($db, "SELECT * FROM posts WHERE slug='$slug'");
-            $result = mysqli_num_rows($checkSlug);
-            if($result > 0) {
-                foreach($checkSlug as $cslug) {
-                    $newSlug = $slug.uniqid();
-                }
-                $record = $post->addPost($title, $content, $create_at, $slug);
-            } else {
-                $record = $post->addPost($title, $content, $create_at, $slug);
-            }
-            
-            if ($record==True){
-                echo "<div class='text-center alert alert-success'>Post Added Successfully</div>";
-            }
-        }
-        else {
-            echo"<div class='text-center alert alert-danger'>Every field is required</div>";
+    if(isset($_POST['btnUpdate'])) {
+        $result = $posts->updatePost($_POST['title'], $_POST['content'], $_GET['slug']);
+        if($result == true) {
+            echo "<div class='text-center alert alert-success'>포스트 업데이트 성공!</div>";
         }
     }
 ?>
 
 <div class="container">
-    <div class="row">
+    <div class="row justify-content-center">
+        <?php foreach($posts->getSinglePost($_GET['slug'])as $post){ ?>
         <div class="col-md-8">
-            <form action="add.php" method="POST" enctype="multipart/form-data">
+            <form action="#" method="POST" enctype="multipart/form-data">
                 <div class="card mt-4">
-                    <div class="card-header">글 작성</div>
+                    <div class="card-header">글 수정</div>
                     <div class="card-body">
                         <div class="form-group">
                             <label for="title">제목</label>
-                            <input type="text" name="title" class="form-control">
+                            <input type="text" name="title" class="form-control" value="<?php echo $post['title']; ?>">
                         </div>
 
                         <div class="form-group">
                             <label for="description">내용</label>
-                            <textarea cols="50" id="summernote" name="content" class="form-control"></textarea>
+                            <textarea cols="50" id="summernote" name="content" class="form-control" value=""><?php echo $post['content']; ?></textarea>
                         </div>
 
-                        <div class="form-group form-check-inline">
-                            <label for="tag">태그선택</label></label>
-                            <?php foreach($tags->getAllTags() as $tag) { ?>
-                            <input type="checkbox" name="tags[]" class="form-check-input" value="<?php echo $tag['id'] ?>"><?php echo $tag['tag']; ?>
-                            <?php } ?>
-                        </div>
 
                         <div class="form-group">
-                            <button type="submit" name="btnSubmit" class="btn btn-primary">전송</button>
+                            <button type="submit" name="btnUpdate" class="btn btn-primary">업데이트</button>
                         </div>
                     </div>
                 </div>
             </form>
             
         </div>
+        <?php } ?>
     </div>
 </div>
 
