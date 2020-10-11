@@ -28,6 +28,15 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">관리</a>
                 </li>
+                <?php if(!empty($_SESSION['username'])){ ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="logout.php">로그아웃</a>
+                    </li>
+                    <?php }else{  ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.php">로그인</a>
+                    </li>
+                <?php  } ?>
             </ul>
         </div>
     </nav>

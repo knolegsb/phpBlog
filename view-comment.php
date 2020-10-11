@@ -21,8 +21,8 @@ $comments = new Comment($db);
 			<tr>
 				<td><?php echo $comment['name']; ?></td>
 				<td><?php echo $comment['subject']; ?></td>
-				<td><?php echo $comment['description']; ?></td>
-				<td><?php echo date('Y-m-d',strtotime($comment['created_at'])); ?></td>
+				<td><?php echo $comment['content']; ?></td>
+				<td><?php echo date('Y-m-d',strtotime($comment['create_at'])); ?></td>
 				<td>
 					<form method="POST">
 					<input type="hidden" name="approveID" value="<?php echo $comment['id']; ?>">
